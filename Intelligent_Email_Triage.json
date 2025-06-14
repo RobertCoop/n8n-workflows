@@ -1,0 +1,1763 @@
+{
+  "name": "Intelligent Email Triage",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 1️⃣ Email Intake\n\n**Volume**: 100-500 emails/day\n**Trigger**: Manual or scheduled\n\n→ Fetches unread Gmail messages\n→ Sets execution mode (auto/manual)\n→ Processes in batches for efficiency",
+        "height": 500,
+        "width": 1000,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4560,
+        1400
+      ],
+      "id": "b9903dcc-6da0-4201-bb37-f1a2937774c9",
+      "name": "Email Intake Section"
+    },
+    {
+      "parameters": {
+        "content": "## 2️⃣ Pre-Processing\n\n**Checks**: Duplicate prevention\n**Format**: AI-optimized prompts\n\n→ Verifies email not already processed\n→ Extracts key fields (from, to, subject, body)\n→ Formats for AI consumption",
+        "height": 600,
+        "width": 900,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3060,
+        1340
+      ],
+      "id": "3a72eb8d-4321-40ea-b1c2-2fa1ff629393",
+      "name": "Email Processing Section"
+    },
+    {
+      "parameters": {
+        "content": "## 3️⃣ AI Learning Layer\n\n**Memory**: Vector database (pgvector)\n**Context**: Top 3 similar past emails\n\n→ Embeddings via text-embedding-3-large\n→ Semantic similarity search\n→ Provides context for better predictions",
+        "height": 700,
+        "width": 1000,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2060,
+        1300
+      ],
+      "id": "a20f4ed7-17b8-4be5-b9d5-3cf4044ebf1e",
+      "name": "AI Learning Section"
+    },
+    {
+      "parameters": {
+        "content": "## 4️⃣ AI Analysis Engine\n\n**Model**: OpenAI o3-mini\n**Output**: Action likelihood (0-1)\n**Speed**: <2 seconds per email\n\n→ Analyzes with past examples context\n→ Extracts tasks and justification\n→ Structured JSON response",
+        "height": 600,
+        "width": 900,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -960,
+        1340
+      ],
+      "id": "7c77cb03-c53b-4b8a-bb61-68d8b9559cad",
+      "name": "AI Analysis Section"
+    },
+    {
+      "parameters": {
+        "content": "## 5️⃣ Smart Router\n\n**Decision Logic**:\n🔴 >95% → Automatic action\n🟡 20-95% → Human review\n🟢 <20% → Auto-discard\n\n",
+        "height": 400,
+        "width": 600,
+        "color": 2
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        40,
+        1440
+      ],
+      "id": "31e5eeea-0bc6-4d38-81b8-f0157b5efe49",
+      "name": "Decision Router Section"
+    },
+    {
+      "parameters": {
+        "content": "## 🔴 High Priority Lane\n\n**Threshold**: >95% confidence\n**Action**: Immediate processing\n**Volume**: ~15% of emails\n\n1. Slack alert sent\n2. Email flagged important\n3. Added to action queue",
+        "height": 380,
+        "width": 1280
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        -40
+      ],
+      "id": "4cfa9cda-910a-44b0-a75e-3ebd8a1ddf8f",
+      "name": "High Priority Section"
+    },
+    {
+      "parameters": {
+        "content": "## 🟡 Human Review Lane\n\n**Threshold**: 20-95% confidence\n**Volume**: ~25% of emails\n**Response time**: 2-5 minutes\n\n**Auto Mode**: Flag for batch review\n**Manual Mode**: Real-time Slack request\n→ Captures decision + reasoning\n→ Feeds learning system",
+        "height": 800,
+        "width": 2000,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        840,
+        1040
+      ],
+      "id": "719250d6-05ca-4380-891d-1bac53737563",
+      "name": "Human Review Section"
+    },
+    {
+      "parameters": {
+        "content": "## 🟢 Low Priority Lane\n\n**Threshold**: <20% confidence\n**Volume**: ~60% of emails\n**Timeout**: 10 seconds\n\n→ Optional discard notification\n→ Auto-discard after timeout\n→ Marked as processed",
+        "height": 580,
+        "width": 1800,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        840,
+        2240
+      ],
+      "id": "7d7e2907-3a3a-4dbf-a712-a64f61a1a1ee",
+      "name": "Low Priority Section"
+    },
+    {
+      "parameters": {
+        "content": "## 6️⃣ Learning Feedback Loop\n\n**Storage**: PostgreSQL + pgvector\n**Embeddings**: 3072 dimensions\n**Growth**: Improves with every decision\n\n→ Formats human feedback\n→ Creates semantic embeddings\n→ Stores for future similarity matching",
+        "height": 1000,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        940
+      ],
+      "id": "5e0a614e-48df-40e7-8566-d22991489330",
+      "name": "Feedback Storage Section"
+    },
+    {
+      "parameters": {
+        "content": "## 7️⃣ Final Actions\n\n**Convergence point for all paths**\n\n✓ Important → Flag + notify\n✓ Discarded → Flag + archive\n✓ All → Mark as read\n✓ Loop → Next email",
+        "height": 600,
+        "width": 700,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        4040,
+        1340
+      ],
+      "id": "7feff36c-4be7-4de9-9d9d-003d8b2137f3",
+      "name": "Final Actions Section"
+    },
+    {
+      "parameters": {
+        "content": "## ⚠️ Error Handling\n\n**Catches**: API failures, parsing errors\n**Action**: Flag email for manual review\n**Recovery**: Continues to next email\n\n→ Prevents workflow interruption\n→ Maintains processing queue",
+        "height": 300,
+        "width": 1200
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -3060,
+        2940
+      ],
+      "id": "44686ef7-c341-4f6f-b0f2-34c30f3ce0ea",
+      "name": "Error Handling Section"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -4360,
+        1640
+      ],
+      "id": "5d14f29f-7faa-4f8d-a808-e276cf93fb8b",
+      "name": "Manual Trigger"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"title\": \"EmailTaskExtractionOutput\",\n  \"type\": \"object\",\n  \"description\": \"The structured output from the AI Task List Builder for a single email.\",\n  \"required\": [\n    \"summary\",\n    \"tasks\"\n  ],\n  \"additionalProperties\": false,\n  \"properties\": {\n    \"summary\": {\n      \"type\": \"object\",\n      \"description\": \"High-level assessment of the email’s content and actionability.\",\n      \"required\": [\n        \"email_id\",\n        \"action_likelihood\",\n        \"justification\",\n        \"content_summary\"\n      ],\n      \"additionalProperties\": false,\n      \"properties\": {\n        \"email_id\": {\n          \"type\": \"string\",\n          \"description\": \"Unique identifier of the email (from the mail system).\"\n        },\n        \"action_likelihood\": {\n          \"type\": \"number\",\n          \"minimum\": 0,\n          \"maximum\": 1,\n          \"description\": \"Probability that this email requires user intervention, as a decimal between 0 and 1 inclusive, with three decimal places of precision (e.g., 0.745).\"\n        },\n        \"justification\": {\n          \"type\": \"string\",\n          \"description\": \"Brief explanation supporting the action_likelihood score.\"\n        },\n      \"content_summary_and_interpretation\": {\n          \"type\": \"string\",\n          \"description\": \"A summary of the email's content and the interpretation of that content (to be displayed to the user if manual review is required).  This should be written in a narrative directly addressing the user (e.g. phrases like 'you might need' or 'they want you') and contain all information needed for the user to decide if the email requires action, does not require action, or requires further investigation.\"\n        }\n      }\n    },\n    \"tasks\": {\n      \"type\": \"array\",\n      \"description\": \"List of actionable tasks extracted from the email.\",\n      \"items\": {\n        \"type\": \"object\",\n        \"required\": [\n          \"task_description\",\n          \"due_date\",\n          \"priority\",\n          \"context\"\n        ],\n        \"additionalProperties\": false,\n        \"properties\": {\n          \"task_description\": {\n            \"type\": \"string\",\n            \"description\": \"A concise description of the action item to be performed.\"\n          },\n          \"due_date\": {\n            \"type\": [\n              \"string\",\n              \"null\"\n            ],\n            \"format\": \"date-time\",\n            \"description\": \"Deadline for the task in ISO 8601 date-time format; null if unspecified.\"\n          },\n          \"priority\": {\n            \"type\": \"number\",\n            \"minimum\": 0,\n            \"maximum\": 1,\n            \"description\": \"Relative priority of the task as interpreted by the AI, on a scale from 0 (lowest) to 1 (highest), expressed as a decimal with three decimal places of precision (e.g., 0.250).\"\n          },\n          \"context\": {\n            \"type\": \"object\",\n            \"description\": \"Contextual metadata linking this task back to the email.\",\n            \"required\": [\n              \"subject\",\n              \"sender\"\n            ],\n            \"additionalProperties\": false,\n            \"properties\": {\n              \"subject\": {\n                \"type\": \"string\",\n                \"description\": \"The email’s subject line.\"\n              },\n              \"sender\": {\n                \"type\": \"string\",\n                \"description\": \"The sender’s name and email address.\"\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -420,
+        1480
+      ],
+      "id": "7fe4c26f-dfd8-4f89-90a1-cf0c64c147e3",
+      "name": "Parse AI Response"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {
+          "reasoningEffort": "low"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -580,
+        1480
+      ],
+      "id": "4a211bf3-f0fe-446f-8791-57c920cd0276",
+      "name": "OpenAI o3-mini Model"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3760,
+        1640
+      ],
+      "id": "13762cf7-d521-4abd-9fdb-8302d98d2e80",
+      "name": "Loop Over Items",
+      "notesInFlow": true,
+      "notes": "This ensures we save after each email is processed and do not lose data on errors"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.output.summary.action_likelihood }}",
+                    "rightValue": "=0.95",
+                    "operator": {
+                      "type": "number",
+                      "operation": "gte"
+                    },
+                    "id": "668f500c-b336-483a-b599-7184e5269788"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "automatically_important"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "82fbdb26-d606-4856-acb6-3dbb0ad9db83",
+                    "leftValue": "={{ $json.output.summary.action_likelihood }}",
+                    "rightValue": "=0.2",
+                    "operator": {
+                      "type": "number",
+                      "operation": "lte"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "automatically_discarded"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "79cf1dc6-b2f3-4464-9134-3305882ad187",
+                    "leftValue": false,
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "human_required"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": 2
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        240,
+        1640
+      ],
+      "id": "16f4e000-3e66-4292-9191-762394bc5c13",
+      "name": "Categorize by Action Likelihood",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "user": {
+          "__rl": true,
+          "value": "@robert.coop",
+          "mode": "username"
+        },
+        "message": "=This message needs human review.  Does it require action?  Why or why not. (email id - {{ $('Loop Over Items').item.json.id }})\n\nFrom: {{ $('Loop Over Items').item.json.from.value.map(item => item.address).join(', ') }}\n\nTo:  {{ $('Loop Over Items').item.json.to.value.map(item => item.address).join(', ').substring(0,100) }}\n\nCC: {{ $('Loop Over Items').item.json.cc.value.map(item => item.address).join(', ').substring(0, 100) }}\n\nSubject: {{ $('Loop Over Items').item.json.subject }}\n\nHere is the justification:\n\nAction required probability: {{ $('AI Task List Builder').item.json.output.summary.action_likelihood * 100}}%, {{ $('AI Task List Builder').item.json.output.summary.justification }}\n\n{{ $json.output.summary.content_summary_and_interpretation }}\n\nHere are the detected tasks:\n{{ $json.output.tasks.map(({ task_description }) => `- ${task_description}`).join('\\n') }}",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Does this email require further action?",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Yes"
+                  },
+                  {
+                    "option": "No"
+                  },
+                  {
+                    "option": "Skip"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Reasoning",
+              "fieldType": "textarea",
+              "placeholder": "Explain in detail why or why not.",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1660,
+        1440
+      ],
+      "id": "74fa33fb-80a5-4a76-a8a1-fe3a69e103bd",
+      "name": "Request Human Review",
+      "webhookId": "b475cd64-add5-4f81-a757-440aec1cc5a3",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $('Save human feedback').item.json[\"Does this email require further action?\"] }}",
+                    "rightValue": "Yes",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "7f423098-861b-446b-b695-78e7be57ef5f"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Action required"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "7352756e-9859-4155-a634-313bad9b6da6",
+                    "leftValue": "={{ $('Save human feedback').item.json['Does this email require further action?']}}",
+                    "rightValue": "No",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "No action required"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "none"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        3480,
+        1720
+      ],
+      "id": "260d3686-3b07-4b73-9272-e1b1d6c5d224",
+      "name": "Route Feedback Decision",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": "email_vectors_reformatted",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        1440
+      ],
+      "id": "842b9604-e599-48e6-a758-656783ddcaaf",
+      "name": "Store Feedback for Learning",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "=\n\n\n---- HUMAN FEEDBACK ---\n\nDoes this action require human feedback?\n{{ $('Save human feedback').item.json[\"Does this email require further action?\"] }}\n\nWhy or why not?\n{{ $('Save human feedback').item.json[\"Reasoning\"] }}\n\n\n---------  EMAIL --------\n\n{{ $('Convert email JSON to prompt').item.json.prompt }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        3460,
+        980
+      ],
+      "id": "09d38ce5-aad9-41b4-86a8-c7844ddc75d2",
+      "name": "Format Feedback Data"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 3072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3340,
+        1000
+      ],
+      "id": "5fc65f9e-57e4-43cd-9e0a-3d2d48a1e339",
+      "name": "Create Feedback Embeddings"
+    },
+    {
+      "parameters": {
+        "chunkSize": 10000000000
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        3580,
+        1120
+      ],
+      "id": "be52af24-fd5a-429a-b2b3-3222d18af3f0",
+      "name": "Prepare Text for Embedding"
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "tableName": "email_vectors_reformatted",
+        "prompt": "={{ $('Convert email JSON to prompt').item.json.prompt }}",
+        "topK": "=3",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePGVector",
+      "typeVersion": 1,
+      "position": [
+        -1980,
+        1620
+      ],
+      "id": "7e7fe6d3-a1b4-4fae-92c7-a459a54f7ed8",
+      "name": "Load Similar Past Examples",
+      "alwaysOutputData": true,
+      "credentials": {
+        "postgres": {
+          "id": "7iKCYQL2rdxUl5df",
+          "name": "Lapis Coopnet"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 3072
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -2000,
+        1860
+      ],
+      "id": "ce2a5fc3-5488-40c2-82aa-6985a6095828",
+      "name": "Create Query Embeddings"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "document"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1320,
+        1500
+      ],
+      "id": "000adcef-7809-4ad9-a0d7-13863ecd76e2",
+      "name": "Combine Past Examples",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "user": {
+          "__rl": true,
+          "value": "@robert.coop",
+          "mode": "username"
+        },
+        "message": "=THIS MESSAGE WILL BE AUTOMATICALLY DISCARDED UNLESS YOU INTERVENE in 10 seconds (email id - {{ $('Loop Over Items').item.json.id }}) .\n\nFrom: {{ $('Loop Over Items').item.json.from.value.map(item => item.address).join(', ') }}\n\nTo:  {{ $('Loop Over Items').item.json.to.value.map(item => item.address).join(', ').substring(0, 100) }}\n\nCC: {{ $('Loop Over Items').item.json.cc.value.map(item => item.address).join(', ').substring(0, 100) }}\n\nSubject: {{ $('Loop Over Items').item.json.subject }}\n\nHere is the justification:\n\nAction required probability: {{ $('AI Task List Builder').item.json.output.summary.action_likelihood * 100}}%, {{ $('AI Task List Builder').item.json.output.summary.justification }}\n\n{{ $json.output.summary.content_summary_and_interpretation }}\n\nHere are the detected tasks:\n{{ $json.output.tasks.map(({ task_description }) => `- ${task_description}`).join('\\n') }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double",
+            "approveLabel": "Discard message",
+            "disapproveLabel": "Abort, this message requires action"
+          }
+        },
+        "options": {
+          "limitWaitTime": {
+            "values": {
+              "resumeAmount": 0.08,
+              "resumeUnit": "minutes"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1420,
+        2440
+      ],
+      "id": "ef8c22de-415b-487f-9638-c3690b5bb545",
+      "name": "Auto-Discard Notification",
+      "webhookId": "b475cd64-add5-4f81-a757-440aec1cc5a3",
+      "notesInFlow": true,
+      "notes": "Tell user we've discarded"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.approved }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    },
+                    "id": "eba97470-cfbf-40b9-a1ba-54aaa7fa2572"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Confirmed discard"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2fc413de-a20c-4bcd-a5b2-ed36794cb252",
+                    "leftValue": "={{ $json.data.approved }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Rejected discard"
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        1820,
+        2440
+      ],
+      "id": "2172e1bb-deb3-4a6a-84b8-881a2564ed14",
+      "name": "Process confirmation"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        2100,
+        1080
+      ],
+      "id": "90b6c9bd-59e7-4476-a887-dd2d2e55fb32",
+      "name": "Skip and loop"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2433642f-d740-47c6-b027-09d911a07033",
+              "leftValue": "={{ $json.labelIds }}",
+              "rightValue": "Label_1286020266016894675",
+              "operator": {
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
+              }
+            },
+            {
+              "id": "f62ce243-d857-491a-b6ee-4a55172e060b",
+              "leftValue": "={{ $json.labelIds }}",
+              "rightValue": "Label_5376076924944686848",
+              "operator": {
+                "type": "array",
+                "operation": "notContains",
+                "rightType": "any"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2860,
+        1640
+      ],
+      "id": "b0849d07-634d-4d21-9b60-a72b56a73527",
+      "name": "Check If Already Processed",
+      "notesInFlow": true,
+      "notes": "You need to modify this to get the actual Label IDs after labels are manually created in Gmail"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}",
+        "labelIds": [
+          "Label_5376076924944686848"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1600,
+        1080
+      ],
+      "id": "d2fa570d-54e1-4be3-a85f-75b4f7094c2a",
+      "name": "Flag for later review in automatic mode",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}",
+        "labelIds": [
+          "Label_3229850843049958913"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2340,
+        2460
+      ],
+      "id": "d9c438ed-1780-470a-b158-c8a95bf72286",
+      "name": "Flag as discarded",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      },
+      "notes": "Request timed out- discard"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}",
+        "labelIds": [
+          "Label_7385543042413998053"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        4240,
+        1740
+      ],
+      "id": "754a0ba3-c513-4c79-bcb5-c9a552faac81",
+      "name": "Flag as manually discarded",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}",
+        "labelIds": [
+          "Label_6143132236338012916"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -2620,
+        3020
+      ],
+      "id": "2a4b7254-6f54-4fae-b157-a2b61c5c2899",
+      "name": "Flag as Error",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      },
+      "notes": "Ensure we don't reprocess"
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        4240,
+        1540
+      ],
+      "id": "d6c5fa1a-06d1-4259-b528-33bdbab8ffa0",
+      "name": "Mark as Read",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "language": "python",
+        "pythonCode": "import re\nfrom bs4 import BeautifulSoup\n\ndef build_email_prompt(email: dict) -> str:\n    \"\"\"\n    Given a Gmail JSON email dict, extract the most relevant fields\n    and return a single, AI-friendly prompt string.\n    \"\"\"\n    # 1. Subject\n    subject = email.get(\"subject\", \"\").replace(\"Subject: \", \"\").strip()\n    \n    # 2. From\n    from_entry = email.get(\"from\", {}).get(\"value\", [{}])[0]\n    from_name = from_entry.get(\"name\") or from_entry.get(\"address\", \"\")\n    from_addr = from_entry.get(\"address\", \"\")\n    sender = f\"{from_name} <{from_addr}>\" if from_name else from_addr\n    \n    # 3. To\n    to_list = email.get(\"to\", {}).get(\"value\", [])\n    recipients = \", \".join(r.get(\"address\", \"\") for r in to_list if r.get(\"address\"))\n\n    cc_list = email.get(\"cc\", {}).get(\"value\", [])\n    cc_recipients = \", \".join(r.get(\"address\", \"\") for r in cc_list if r.get(\"address\"))\n\n  \n    # 4. Date\n    date = email.get(\"date\", \"\").strip()\n    \n    # 5. Body: prefer plain text, fallback to stripping HTML\n    body = email.get(\"text\", \"\").strip()\n    if not body:\n        html = email.get(\"html\", \"\")\n        body = BeautifulSoup(html, \"html.parser\").get_text(separator=\"\\n\").strip()\n    \n    # 6. Extract any URLs mentioned\n    urls = re.findall(r'https?://\\S+', body)\n    stripped_urls = [u[:200] for u in urls]\n    urls_section = \"\\n\".join(stripped_urls) if stripped_urls else \"\"\n    \n    # 7. Assemble prompt parts\n    parts = []\n    if subject:\n        parts.append(f\"Subject: {subject}\")\n    if sender:\n        parts.append(f\"From: {sender}\")\n    if recipients:\n        parts.append(f\"To: {recipients}\")\n    if cc_recipients:\n        parts.append(f\"CC: {cc_recipients}\")\n    if date:\n        parts.append(f\"Date: {date}\")\n    \n    parts.append(\"\\nBody:\")\n    parts.append(body)\n    \n    if urls_section:\n        parts.append(\"\\nLinks:\")\n        parts.append(urls_section)\n    \n    # Join with two newlines for readability\n    return \"\\n\\n\".join(parts)\n\n\n# Loop over input items and add a new field called 'myNewField' to the JSON of each one\nprompts = []\n\nfor i, item in enumerate(_input.all()):\n  prompt = build_email_prompt(item.json)\n  item.json.prompt_text = prompt\n  prompts.append( {\n    \"json\": {\"prompt\": prompt},\n    \"pairedItem\": i\n    \n  })\nreturn prompts"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2660,
+        1640
+      ],
+      "id": "1444d58e-81ca-4986-8872-c4eccaf7fb8f",
+      "name": "Convert email JSON to prompt",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "076322b9-5024-4103-92f6-29dd5a448dc2",
+              "leftValue": "={{ $json.score }}",
+              "rightValue": 0.3,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1560,
+        1500
+      ],
+      "id": "38ce2141-c290-44a7-ad20-9cea1178a0d0",
+      "name": "Keep only relevant examples",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "notes": "Filter based on similarity"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $if($json.document.isEmpty(), '', 'When determining wheter any action is required, consider these prior examples that received human feedback:\\n\\n' + $json.document.map((item, idx) => `EXAMPLE ${idx}:\\n\\n ${item.pageContent}\\n\\nEND EXAMPLE`).join('\\n')) }}\n\nEMAIL TO PROCESS:\n\nemail_id: {{ $('Get batch of unread messages').item.json.id }}\n\n{{ $('Convert email JSON to prompt').item.json.prompt }}\n\nEND EMAIL",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are **AI Task List Builder**, a dedicated assistant whose sole job is to convert one email at a time into a structured JSON object describing its actionability and any follow-up tasks.  \n\n  ### Role & Objective\n  - Parse exactly one email per invocation.\n  - Produce output matching the requested format using the requested syntax\n\n  ### Input\n  - The email, including selected headers (`email_id`, `subject`, `from`), plain text or HTML body, and selected metadata.\n\n  ### Processing Steps\n  1. **Extract Summary**  \n     - `email_id`: copy the unique message ID verbatim.  \n     - `action_likelihood`: your estimate (0.000–1.000, three decimal places) of how likely the email requires user action.  \n     - `justification`: one concise sentence referencing the email content to explain that score.\n     - `content_summary_and_interpretation`: A summary of the email's content and the interpretation of that content (to be displayed to the user if manual review is required).  This should be written in a narrative directly addressing the user (e.g. phrases like 'you might need' or 'they want you') and contain all information needed for the user to decide if the email requires action, does not require action, or requires further investigation.\n\n  2. **Identify Tasks**  \n     For each actionable item in the email, create an object with:  \n     - `task_description` (string): a brief, clear instruction for the user.  \n     - `due_date` (ISO 8601 string or `null`): deadline if mentioned or implied; otherwise `null`.  \n     - `priority` (0.000–1.000, three decimals): your judgment of the task’s importance (1.000 = highest).  \n     - `context` (object):  \n         - `subject` (string): the email’s subject line.  \n         - `sender` (string): the sender’s name and address, e.g. `Acme Corp <no-reply@acme.com>`.\n\n  ### Output Format\n  - Return **only** the requested object structure using the requested format\n  - Omit any fields not listed, and maintain three-decimal precision for all probabilities.\n\nYou are acting on behalf of:   {{ $('Get batch of unread messages').first().json.headers[\"delivered-to\"].split(' ')[1] }} "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        -760,
+        1640
+      ],
+      "id": "cbba6fe6-6b77-42a7-afe0-b8e6d29dd452",
+      "name": "AI Task List Builder",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "@robert.coop",
+          "mode": "username"
+        },
+        "text": "=This message was flagged as actionable\n\nFrom: {{ $('Loop Over Items').item.json.from.value.map(item => item.address).join(', ') }}\n\nTo:  {{ $('Loop Over Items').item.json.to.value.map(item => item.address).join(', ').substring(0, 100) }}\n\nCC: {{ $('Loop Over Items').item.json.cc.value.map(item => item.address).join(', ').substring(0, 100) }}\n\nSubject: {{ $('Loop Over Items').item.json.subject }}\n\nHere is the justification:\n\nAction required probability: {{ $('AI Task List Builder').item.json.output.summary.action_likelihood * 100}}%, {{ $('AI Task List Builder').item.json.output.summary.justification }}\n\n{{ $json.output.summary.content_summary_and_interpretation }}\n\nHere are the detected tasks:\n{{ $json.output.tasks.map(({ task_description }) => `- ${task_description}`).join('\\n') }}",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        140
+      ],
+      "id": "1373d02c-c159-44ef-bef7-94649456e4ca",
+      "name": "Notify about actionable email",
+      "webhookId": "f49fa546-359e-48ed-be24-7ed47038aa02"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 500,
+        "simple": false,
+        "filters": {
+          "readStatus": "unread"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -3960,
+        1640
+      ],
+      "id": "408da726-5185-4411-b553-b70f819bd6da",
+      "name": "Get batch of unread messages",
+      "webhookId": "49056cb9-0e6f-4148-ac57-b54c503033d5",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "GXwqi75BDovnqkNS",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        140
+      ],
+      "id": "6900bbd0-ffbb-44cc-98f2-b562b2d90222",
+      "name": "Process actionable email"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "13afe221-4fcf-4d5d-a73e-df400f02da83",
+              "name": "data[\"Does this email require further action?\"]",
+              "value": "No",
+              "type": "string"
+            },
+            {
+              "id": "e3372f45-c71c-4e42-98d2-91be3c5c7ed6",
+              "name": "data.Reasoning",
+              "value": "={{ $('AI Task List Builder').item.json.output.summary.justification }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2160,
+        2280
+      ],
+      "id": "2c3a804b-818a-48df-94fc-5ac609dd4066",
+      "name": "Record human feedback",
+      "notesInFlow": true,
+      "notes": "Use feedback for training"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1832ea77-e4ce-48e9-8b59-71f63e35b3ed",
+              "leftValue": "={{ $('Execution Settings').item.json.automatic }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        1420
+      ],
+      "id": "3286bda1-6c98-43c5-9d1c-fbdfa6fc6838",
+      "name": "Are we running in automatic mode?",
+      "notesInFlow": true,
+      "notes": "Save for later if so"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d87639af-6e33-494c-8440-9e0e2e934b03",
+              "leftValue": "={{ $json.data[\"Does this email require further action?\"] }}",
+              "rightValue": "Skip",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1880,
+        1260
+      ],
+      "id": "0c050079-3d17-4e20-b0e2-3e6481515a0a",
+      "name": "Should we process?",
+      "notesInFlow": true,
+      "notes": "False means user skipped"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2100,
+        2580
+      ],
+      "id": "b0526e0d-143e-4490-bf4c-75d7cd783b29",
+      "name": "Send to review request",
+      "alwaysOutputData": true,
+      "notesInFlow": true,
+      "notes": "User manually aborted"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3b5b7ccd-821c-4b4f-b28e-30ee7431c340",
+              "name": "Does this email require further action?",
+              "value": "={{ $json.data[\"Does this email require further action?\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "1889e614-e3c3-4890-8c8a-d0c185ec1bc4",
+              "name": "Reasoning",
+              "value": "={{  $json.data.Reasoning  }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2500,
+        1240
+      ],
+      "id": "feb92135-87c2-40a6-8de1-cf01538e253b",
+      "name": "Save human feedback",
+      "notesInFlow": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3fae1f87-cf01-42fb-9337-822b1061f8c3",
+              "name": "automatic",
+              "value": true,
+              "type": "boolean"
+            },
+            {
+              "id": "54588c84-f923-4865-a40f-175ec427755a",
+              "name": "notify_on_discard",
+              "value": false,
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -4160,
+        1640
+      ],
+      "id": "90c83091-02c6-487f-8b2c-73b747c95405",
+      "name": "Execution Settings",
+      "notesInFlow": true,
+      "notes": "Set options here"
+    },
+    {
+      "parameters": {
+        "content": "## Settings\nSet whether we ask for user feedback or send discard notifications here\n",
+        "height": 680,
+        "width": 180,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -4200,
+        1180
+      ],
+      "id": "d00f7b94-a5f4-4798-a844-8f6e21e8b684",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Loop Over Items').item.json.id }}",
+        "labelIds": [
+          "Label_1286020266016894675"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1920,
+        140
+      ],
+      "id": "9f145016-2808-41a2-923f-fd7370d4e642",
+      "name": "Flag as actionable",
+      "webhookId": "452e3a55-cd94-4d79-be16-e7b3237dde1d",
+      "notesInFlow": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "XZ8hqWqycWyXF2dQ",
+          "name": "Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9dc23ac3-2a4e-4a18-84c7-50a5437c2e69",
+              "leftValue": "={{ $('Execution Settings').item.json.notify_on_discard }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        2620
+      ],
+      "id": "6f468f5c-cd32-41d9-a0df-e84414e45504",
+      "name": "Running in notification mode?"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execution Settings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Check If Already Processed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process confirmation": {
+      "main": [
+        [
+          {
+            "node": "Record human feedback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send to review request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag as discarded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip and loop": {
+      "main": [
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag for later review in automatic mode": {
+      "main": [
+        [
+          {
+            "node": "Skip and loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag as discarded": {
+      "main": [
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag as manually discarded": {
+      "main": [
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark as Read": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag as Error": {
+      "main": [
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse AI Response": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Task List Builder",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI o3-mini Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Task List Builder",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Categorize by Action Likelihood": {
+      "main": [
+        [
+          {
+            "node": "Notify about actionable email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Running in notification mode?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Are we running in automatic mode?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Human Review": {
+      "main": [
+        [
+          {
+            "node": "Should we process?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route Feedback Decision": {
+      "main": [
+        [
+          {
+            "node": "Process actionable email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag as manually discarded",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Store Feedback for Learning": {
+      "main": [
+        [
+          {
+            "node": "Route Feedback Decision",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Route Feedback Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Feedback Data": {
+      "ai_document": [
+        [
+          {
+            "node": "Store Feedback for Learning",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Feedback Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Store Feedback for Learning",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Text for Embedding": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Format Feedback Data",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Load Similar Past Examples": {
+      "main": [
+        [
+          {
+            "node": "Keep only relevant examples",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag as Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Query Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Load Similar Past Examples",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Past Examples": {
+      "main": [
+        [
+          {
+            "node": "AI Task List Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-Discard Notification": {
+      "main": [
+        [
+          {
+            "node": "Process confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Already Processed": {
+      "main": [
+        [
+          {
+            "node": "Convert email JSON to prompt",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert email JSON to prompt": {
+      "main": [
+        [
+          {
+            "node": "Load Similar Past Examples",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag as Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Keep only relevant examples": {
+      "main": [
+        [
+          {
+            "node": "Combine Past Examples",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Task List Builder": {
+      "main": [
+        [
+          {
+            "node": "Categorize by Action Likelihood",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Flag as Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify about actionable email": {
+      "main": [
+        [
+          {
+            "node": "Process actionable email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get batch of unread messages": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process actionable email": {
+      "main": [
+        [
+          {
+            "node": "Flag as actionable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Record human feedback": {
+      "main": [
+        [
+          {
+            "node": "Save human feedback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Are we running in automatic mode?": {
+      "main": [
+        [
+          {
+            "node": "Flag for later review in automatic mode",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Request Human Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Should we process?": {
+      "main": [
+        [
+          {
+            "node": "Save human feedback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Skip and loop",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to review request": {
+      "main": [
+        [
+          {
+            "node": "Request Human Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save human feedback": {
+      "main": [
+        [
+          {
+            "node": "Store Feedback for Learning",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execution Settings": {
+      "main": [
+        [
+          {
+            "node": "Get batch of unread messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Flag as actionable": {
+      "main": [
+        [
+          {
+            "node": "Mark as Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Running in notification mode?": {
+      "main": [
+        [
+          {
+            "node": "Auto-Discard Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5d535a3c-04d5-47fb-9ccf-30b688a93a6f",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4e8b840d7124faeff46be244fa95f9077724f689665ef2f8b2228841de523f12"
+  },
+  "id": "1YPknICxSixKhwMK",
+  "tags": []
+}
